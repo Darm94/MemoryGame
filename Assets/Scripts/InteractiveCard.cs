@@ -61,6 +61,13 @@ public class InteractiveCard : MonoBehaviour
         return imageName == other.imageName; // VERIFICA DUE CARD SIANO UGUALI CONFRONTANDOLE IN BASE AL NOME DEL FILE
     }
 
+    public bool isAlien()
+    {
+        Debug.Log("isAlien ");
+        return imageName == "Evil";
+        
+    }
+
     internal void HideAndDestroy()
     {
         // animation fade, or script fade or shader fade...

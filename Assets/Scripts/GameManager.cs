@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AudioSource wrongPairAudioSource;
     [SerializeField] private AudioSource playLoopAudioSource;
+    [SerializeField] private AudioSource alienAudioSource;
     int pairs ;
 
     InteractiveCard selectedCard1 ;
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
     private float remainingPlayTime;
     [SerializeField] private TextMeshProUGUI timeText;
     bool isGameOver ;
+    private List<InteractiveCard> activeCards = new List<InteractiveCard>();
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -109,13 +112,15 @@ public class GameManager : MonoBehaviour
 
             // We set card texture (using shader graph)
             go.GetComponent<MeshRenderer>().material.SetTexture("_MainTexture", images[row]);
-
+            InteractiveCard interactiveCard = go.GetComponent<InteractiveCard>();
+            
             // this event will be called on this class by the InteractiveCard
             go.GetComponent<InteractiveCard>().OnClicked += SelectedCard;
 
             // We set Interactive card cover image name
             go.GetComponent<InteractiveCard>().imageName = images[row].name;
-
+            activeCards.Add(interactiveCard); // Aggiungi la carta alla lista
+            
             counter++;
 
             if (counter % 2 == 0)
@@ -146,6 +151,20 @@ public class GameManager : MonoBehaviour
 
     private void SelectedCard(InteractiveCard card, bool selected)
     {
+        //Condizione separata per l' Alieno
+        // Condizione di rimescolamento all'inizio, basata su card.isAlien()
+        if (selected && card.isAlien())
+        {
+            alienAudioSource.Play();
+            // Potresti anche voler resettare le carte selezionate finora
+            if (selectedCard1) selectedCard1.ResetMe();
+            if (selectedCard2) selectedCard2.ResetMe();
+            selectedCard1 = null;
+            selectedCard2 = null;
+            RimescolaCarte();
+            return; // Esci dalla funzione SelectedCard dopo il rimescolamento
+        }
+        
         //Se non ho selezionato la 1 card e viene selezionata
         if (selectedCard1 == null && selected)
         {
@@ -173,13 +192,15 @@ public class GameManager : MonoBehaviour
                 // ok match!
                 matchedPairAudioSource.Play();
                 
+                activeCards.Remove(selectedCard1); // Rimuovi la prima carta dalla lista
+                activeCards.Remove(selectedCard2); // Rimuovi la seconda carta dalla lista
                 selectedCard1.HideAndDestroy();
                 selectedCard2.HideAndDestroy();
                 selectedCard1 = null;
                 selectedCard2 = null;
                 pairs--;
 
-                if (pairs == 0)
+                if (pairs <= 1)
                 {
                     // GameOver and WIN
                     winUI.SetActive(true);
@@ -206,4 +227,19 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
+    private void RimescolaCarte()
+    {
+        System.Random random = new System.Random();
+        activeCards = activeCards.OrderBy(x => random.Next()).ToList();
+
+        // Riassegna le posizioni alle carte rimaste
+        for (int i = 0; i < activeCards.Count; i++)
+        {
+            activeCards[i].transform.position = cards[i]; // Usa l'array di posizioni originale
+            activeCards[i].ResetMe(); // Assicurati che le carte siano girate a faccia in giù
+        }
+
+        // Rimescola anche l'array delle posizioni per la prossima rimescolata
+        cards = cards.OrderBy(x => random.Next()).ToArray();
+    }
 }
