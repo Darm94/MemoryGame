@@ -4,6 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour
 
     //UI and custom rules
     [SerializeField] private float Playtime;
+    [SerializeField] private Image TimeBar;
     private float remainingPlayTime;
     [SerializeField] private TextMeshProUGUI timeText;
     bool isGameOver ;
@@ -141,6 +143,7 @@ public class GameManager : MonoBehaviour
         {
             remainingPlayTime -= Time.deltaTime;
             timeText.text = ((int)remainingPlayTime).ToString()+"s";
+            TimeBar.fillAmount = remainingPlayTime / Playtime;
 
             //GameOver and And Of Loop
             if (remainingPlayTime < 0)

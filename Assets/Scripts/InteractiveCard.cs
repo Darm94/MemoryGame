@@ -63,7 +63,7 @@ public class InteractiveCard : MonoBehaviour
 
     public bool isAlien()
     {
-        Debug.Log("isAlien ");
+        //Debug.Log("isAlien ");
         return imageName == "Evil";
         
     }
