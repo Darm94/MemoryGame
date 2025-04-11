@@ -51,7 +51,7 @@ ExportedObj/
 Assets/My Production Line/**/*.png
 Assets/My Production Line/**/*.png.meta
 Assets/My Production Line/**/*.meta
-*.png
+#*.png
 *.png.meta
 Assets/My Production Line/**
 
