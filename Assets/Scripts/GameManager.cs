@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -58,6 +59,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeText;
     bool isGameOver ;
     private List<InteractiveCard> activeCards = new List<InteractiveCard>();
+    
+    //BackToStartScene
+    [SerializeField] private SceneAsset StartScene ;
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -225,6 +229,11 @@ public class GameManager : MonoBehaviour
     public void PlayAgain()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene(StartScene.name);
     }
     
     private void RimescolaCarte()
