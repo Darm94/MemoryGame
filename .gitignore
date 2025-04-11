@@ -47,6 +47,14 @@ ExportedObj/
 *.opendb
 *.VC.db
 
+#project pngs
+Assets/My Production Line/**/*.png
+Assets/My Production Line/**/*.png.meta
+Assets/My Production Line/**/*.meta
+*.png
+*.png.meta
+Assets/My Production Line/**
+
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
